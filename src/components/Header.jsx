@@ -4,6 +4,7 @@ import LOGO from '../assets/Logo.svg';
 
 import { IoReorderThreeOutline } from 'react-icons/io5'
 const Header = () => {
+  
   return (
     <div className='bg-[#53389E]'>
         <div className=' px-4 py-2 flex justify-between items-center sm:w-10/12 mx-auto'>
