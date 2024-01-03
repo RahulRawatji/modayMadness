@@ -1,8 +1,11 @@
 import "./App.css"
 import Board from "./Board"
+import Sidebar from "./components/Sidebar/Sidebar"
+
 function App() {
   return (
-    <div className="p-3">
+    <div className="flex">
+      <Sidebar />
       <Board />
     </div>
   )
