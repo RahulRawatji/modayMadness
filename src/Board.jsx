@@ -14,7 +14,8 @@ export default function Board() {
 
   function handleDragEnd(event) {
     const temp = cloneDeep(boardData)
-    if (event.over) {
+
+    if (event.over && startCol !== event.over.id) {
       const { current } = event.active.data
       const newD = [{ ...current.data }, ...temp[event.over.id]]
       const prevArrData = temp[startCol].filter(
@@ -30,6 +31,11 @@ export default function Board() {
 
   function handleDragStart(e) {
     setStartCol(e.active.data.current.fromCol)
+    setMovingElement(e.active.data.current)
+  }
+
+  const handleAddList = () => {
+    setBoardData((prev) => ({ ...prev, ["Backlog"]: [] }))
   }
 
   return (
@@ -47,7 +53,7 @@ export default function Board() {
             ))}
           </Droppable>
         ))}
-        <MdOutlineAdd size={22} />
+        <MdOutlineAdd size={22} onClick={handleAddList} />
       </div>
     </DndContext>
   )
