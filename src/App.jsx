@@ -1,15 +1,10 @@
-import './App.css'
-import Footer from './components/Footer'
-import Header from './components/Header'
-import MainContainer from './components/MainContainer'
-
+import "./App.css"
+import Board from "./Board"
 function App() {
- 
-  return (<>
-  <Header/>
-  <MainContainer/>
-  <Footer/>
-  </>)
+  return (
+    <div className="p-3">
+      <Board />
+    </div>
+  )
 }
-
 export default App
