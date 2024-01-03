@@ -4,48 +4,50 @@ import { DndContext, DragOverlay } from "@dnd-kit/core"
 import Draggable from "./Draggable"
 import Droppable from "./Droppable"
 import { data, statuses } from "./constant"
+import { MdOutlineAdd } from "react-icons/md"
+import { cloneDeep } from "lodash"
 
 export default function Board() {
-  const [todo, setTodo] = useState(data)
-  const [inProgress, setInProgress] = useState([])
+  const [boardData, setBoardData] = useState(data)
+  const [movingElement, setMovingElement] = useState({})
+  const [startCol, setStartCol] = useState({})
 
   function handleDragEnd(event) {
-    if (event.over && event.over.id === "1") {
-      setTodo((prev) => [...prev, { ...event.active.data.current }])
-      setInProgress((prev) =>
-        prev.filter((d) => d.id !== event.active.data.current.id)
+    const temp = cloneDeep(boardData)
+    if (event.over) {
+      const { current } = event.active.data
+      const newD = [{ ...current.data }, ...temp[event.over.id]]
+      const prevArrData = temp[startCol].filter(
+        (item) => item.id !== event.active.id
       )
-    } else {
-      setInProgress((prev) => [...prev, { ...event.active.data.current }])
-      setTodo((prev) =>
-        prev.filter((d) => d.id !== event.active.data.current.id)
-      )
+      setBoardData((prev) => ({
+        ...prev,
+        [event.over.id]: newD,
+        [startCol]: prevArrData,
+      }))
     }
   }
 
+  function handleDragStart(e) {
+    setStartCol(e.active.data.current.fromCol)
+  }
+
   return (
-    <DndContext onDragEnd={handleDragEnd}>
+    <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
       <div className="flex h-96 gap-5">
-        <Droppable id={"1"} data={todo}>
-          <h3 className="text-center">Todo</h3>
+        {Object.keys(boardData).map((colTitle) => (
+          <Droppable id={colTitle} key={colTitle} data={boardData[colTitle]}>
+            <h3 className="text-center">{colTitle}</h3>
 
-          {todo.map((d) => (
-            <Draggable key={d.id} id={d.id} data={d}>
-              <span>{d.title}</span>
-              <div>{d.icon}</div>
-            </Draggable>
-          ))}
-        </Droppable>
-
-        <Droppable id="2">
-          <h3 className="text-center">In Progress</h3>
-          {inProgress.length > 0 &&
-            inProgress.map((d) => (
-              <Draggable key={d.id} id={d.id} data={d}>
-                {d.title}
+            {boardData[colTitle].map((d) => (
+              <Draggable key={d.id} id={colTitle} data={d}>
+                <span>{d.title}</span>
+                <div>{d.icon}</div>
               </Draggable>
             ))}
-        </Droppable>
+          </Droppable>
+        ))}
+        <MdOutlineAdd size={22} />
       </div>
     </DndContext>
   )
