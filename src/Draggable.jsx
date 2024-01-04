@@ -4,10 +4,10 @@ import { useDraggable } from "@dnd-kit/core"
 export default function Draggable(props) {
   const { attributes, listeners, setNodeRef, transform, setActivatorNodeRef } =
     useDraggable({
-      id: props.data.id,
+      id: props?.data?.id,
       data: {
-        data: props.data,
-        fromCol: props.id,
+        data: props?.data,
+        fromCol: props?.id,
       },
     })
   const style = transform
@@ -17,14 +17,14 @@ export default function Draggable(props) {
     : undefined
 
   return (
-    <button
+    <div
       ref={setNodeRef}
       style={style}
       {...listeners}
       {...attributes}
-      className="border p-2 bg-orange-300 text-white flex "
+      className="border p-2 flex shadow-md "
     >
       {props.children}
-    </button>
+    </div>
   )
 }

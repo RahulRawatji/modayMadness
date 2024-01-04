@@ -13,7 +13,7 @@ export default function Droppable(props) {
     <div
       ref={setNodeRef}
       style={style}
-      className="border bg-slate-100 flex flex-col gap-4 p-3"
+      className="border flex flex-col gap-4 p-3 w-[250px]"
     >
       {props.children}
     </div>
