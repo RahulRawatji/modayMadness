@@ -7,6 +7,16 @@ import { data, statuses } from "./constant"
 import { MdOutlineAdd } from "react-icons/md"
 import { cloneDeep } from "lodash"
 import { Input } from "@/components/ui/input"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { IoIosReturnLeft } from "react-icons/io"
 
 export default function Board() {
   const [boardData, setBoardData] = useState(data)
@@ -37,6 +47,7 @@ export default function Board() {
   }
 
   const handleAddList = () => {
+    setShowAddNewCol(true)
     setBoardData((prev) => ({ ...prev, ["Backlog"]: [] }))
   }
 
@@ -90,8 +101,22 @@ export default function Board() {
               </Draggable>
             </Droppable>
           ))}
-          <MdOutlineAdd size={22} onClick={handleAddList} />
-          {showAddNewCol && <div></div>}
+          <div>
+            <Dialog>
+              <DialogTrigger>
+                <MdOutlineAdd size={22} />
+              </DialogTrigger>
+              <DialogContent>
+                <div className="flex gap-4 pr-4">
+                  <Input />
+                  <Button variant="outline">
+                    <span className="pr-2"> Add</span>{" "}
+                    <IoIosReturnLeft size={18} />
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
       </div>
     </DndContext>
