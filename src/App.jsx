@@ -1,13 +1,7 @@
 import "./App.css"
-import Board from "./Board"
-import Sidebar from "./components/Sidebar/Sidebar"
+import Router from "./router/Router"
 
 function App() {
-  return (
-    <div className="flex">
-      <Sidebar />
-      <Board />
-    </div>
-  )
+  return <Router />
 }
 export default App
