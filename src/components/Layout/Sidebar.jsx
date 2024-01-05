@@ -8,6 +8,7 @@ import { MdAddCircleOutline } from "react-icons/md"
 import { FaRegClipboard } from "react-icons/fa"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { GiBlackBook } from "react-icons/gi"
+import { FaEarthAsia } from "react-icons/fa6"
 
 const Sidebar = () => {
   return (
@@ -38,7 +39,14 @@ const Sidebar = () => {
           New Page
         </NavLink>
       </div>
-      <div className="mt-4">
+      <div className="mt-4 flex flex-col gap-1">
+        <NavLink
+          className="flex gap-2 items-center pl-4 py-1 hover:bg-slate-200 hover:cursor-pointer"
+          to="/"
+        >
+          <GiBlackBook size={18} />
+          My Notes
+        </NavLink>
         <NavLink
           className="flex gap-2 items-center pl-4 py-1 hover:bg-slate-200 hover:cursor-pointer"
           to="/board"
@@ -48,10 +56,10 @@ const Sidebar = () => {
         </NavLink>
         <NavLink
           className="flex gap-2 items-center pl-4 py-1 hover:bg-slate-200 hover:cursor-pointer"
-          to="/"
+          to="/travel"
         >
-          <GiBlackBook size={18} />
-          Notes
+          <FaEarthAsia size={18} />
+          Travel Planner
         </NavLink>
       </div>
     </div>

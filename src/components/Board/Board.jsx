@@ -1,20 +1,13 @@
 import React, { useState } from "react"
-import { DndContext, DragOverlay } from "@dnd-kit/core"
-
+import { DndContext } from "@dnd-kit/core"
+import { v4 as uuidv4 } from "uuid"
 import Draggable from "./Draggable"
 import Droppable from "./Droppable"
-import { data, statuses } from "./contant/constant"
+import { data } from "./constant/constant"
 import { MdOutlineAdd } from "react-icons/md"
 import { cloneDeep } from "lodash"
 import { Input } from "@/components/ui/input"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { IoIosReturnLeft } from "react-icons/io"
 import Layout from "../Layout"
@@ -25,6 +18,7 @@ export default function Board() {
   const [startCol, setStartCol] = useState({})
   const [showNewCard, setShowNewCard] = useState({ visible: false, col: null })
   const [showAddNewCol, setShowAddNewCol] = useState(false)
+  const [newTask, setNewTask] = useState("")
   function handleDragEnd(event) {
     const temp = cloneDeep(boardData)
 
@@ -63,6 +57,18 @@ export default function Board() {
     }
   }
 
+  const saveNewTask = (colTitle) => {
+    const tempBoardData = cloneDeep(boardData)
+    if (newTask !== "") {
+      tempBoardData[colTitle] = [
+        ...tempBoardData[colTitle],
+        { id: uuidv4(), title: newTask, content: "Get an anniversary gift" },
+      ]
+
+      setBoardData((prev) => tempBoardData)
+    }
+    setShowNewCard((prev) => ({ ...prev, visible: false }))
+  }
   return (
     <Layout>
       <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
@@ -89,22 +95,20 @@ export default function Board() {
                   </Draggable>
                 ))}
                 {showNewCard.visible && showNewCard.col === colTitle && (
-                  <Draggable id={colTitle} data={{}}>
-                    <Input
-                      onBlur={() => setShowNewCard(false)}
-                      placeholder="Enter"
-                    />
-                  </Draggable>
+                  <Input
+                    onBlur={() => saveNewTask(colTitle)}
+                    onChange={(e) => setNewTask(e.target.value)}
+                    placeholder="Enter"
+                  />
                 )}
-                <Draggable id={colTitle} data={{}}>
-                  <button
-                    className="flex gap-3 items-center hover:scale-105 w-full"
-                    onClick={() => addNewCard(colTitle)}
-                  >
-                    <MdOutlineAdd size={18} />
-                    New
-                  </button>
-                </Draggable>
+
+                <button
+                  className="flex gap-3 items-center hover:scale-105 w-full"
+                  onClick={() => addNewCard(colTitle)}
+                >
+                  <MdOutlineAdd size={18} />
+                  New
+                </button>
               </Droppable>
             ))}
             <div>
@@ -114,7 +118,7 @@ export default function Board() {
                 </DialogTrigger>
                 <DialogContent>
                   <div className="flex gap-4 pr-4">
-                    <Input />
+                    <Input placeholder="Status" />
                     <Button variant="outline">
                       <span className="pr-2"> Add</span>{" "}
                       <IoIosReturnLeft size={18} />

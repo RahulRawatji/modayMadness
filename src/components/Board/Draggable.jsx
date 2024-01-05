@@ -23,6 +23,7 @@ export default function Draggable(props) {
       {...listeners}
       {...attributes}
       className="border p-2 flex shadow-md "
+      onClick={() => console.log(props.data.id)}
     >
       {props.children}
     </div>

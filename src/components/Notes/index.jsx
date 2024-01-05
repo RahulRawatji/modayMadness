@@ -1,125 +1,87 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
+import { MdOutlineAdd } from "react-icons/md"
+import { Button } from "@/components/ui/button"
+
 import Layout from "../Layout"
+import NoteCard from "./NoteCard"
+import { NOTES_DATA } from "./constant/constant"
+import CreateNote from "./CreateNote"
 
 const Notes = () => {
+  const [tabList, setTabList] = useState([])
+  const [activeTab, setActiveTab] = useState(null)
+  const [activeTabData, setActiveTabData] = useState([])
+  const [openDrawer, setOpenDrawer] = useState(false)
+  const getData = () => {
+    const tempTabData = Object.keys(NOTES_DATA)
+    setTabList(tempTabData)
+    setActiveTab(tempTabData[0])
+  }
+
+  useEffect(() => {
+    getData()
+  }, [])
+
+  useEffect(() => {
+    setActiveTabData(NOTES_DATA[activeTab])
+  }, [activeTab])
+
+  if (tabList.length == 0) return
+
   return (
     <Layout>
       <div className="p-4">
         <h4 className="text-2xl font-bold">My Notes</h4>
         <div className="mt-10">
-          <Tabs defaultValue="account">
-            <div className="flex gap-5">
+          <Tabs defaultValue={activeTab}>
+            <div className="flex gap-5 overflow-hidden">
               <TabsList className="gap-6">
-                <TabsTrigger value="account">General</TabsTrigger>
-                <TabsTrigger value="ideas">Ideas</TabsTrigger>
-                <TabsTrigger value="important">Important</TabsTrigger>
+                {tabList.map((tab) => {
+                  return (
+                    <TabsTrigger
+                      key={tab}
+                      value={tab}
+                      onClick={() => setActiveTab(tab)}
+                    >
+                      {tab.toUpperCase()}
+                    </TabsTrigger>
+                  )
+                })}
               </TabsList>
-              <button>Add</button>
+              <Button
+                variant="ghost"
+                onClick={() => setTabList((prev) => [...prev, "fire"])}
+              >
+                <MdOutlineAdd size={20} />
+                Add
+              </Button>
             </div>
             <div className="mt-8">
-              <TabsContent value="account" className="flex gap-4 flex-wrap">
-                <Card className="w-[350px]">
-                  <CardHeader>
-                    <CardTitle>Create project</CardTitle>
-                    <CardDescription>
-                      Deploy your new project in one-click.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <form>
-                      <div className="grid w-full items-center gap-4">
-                        <div className="flex flex-col space-y-1.5"></div>
-                        <div className="flex flex-col space-y-1.5"></div>
-                      </div>
-                    </form>
+              <TabsContent value={activeTab} className="flex gap-4 flex-wrap">
+                <Card
+                  className="w-[300px] h-[300px] border border-dashed"
+                  onClick={() => setOpenDrawer(true)}
+                >
+                  <CardContent className="flex justify-center items-center h-full hover:cursor-pointer">
+                    <div className="flex flex-col gap-3 items-center">
+                      <MdOutlineAdd size={30} />
+                      <h3 className="font-semibold">Add New Note</h3>
+                    </div>
                   </CardContent>
-                  <CardFooter className="flex justify-between"></CardFooter>
                 </Card>
-                <Card className="w-[350px]">
-                  <CardHeader>
-                    <CardTitle>Create project</CardTitle>
-                    <CardDescription>
-                      Deploy your new project in one-click.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <form>
-                      <div className="grid w-full items-center gap-4">
-                        <div className="flex flex-col space-y-1.5"></div>
-                        <div className="flex flex-col space-y-1.5"></div>
-                      </div>
-                    </form>
-                  </CardContent>
-                  <CardFooter className="flex justify-between"></CardFooter>
-                </Card>
-                <Card className="w-[350px]">
-                  <CardHeader>
-                    <CardTitle>Create project</CardTitle>
-                    <CardDescription>
-                      Deploy your new project in one-click.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <form>
-                      <div className="grid w-full items-center gap-4">
-                        <div className="flex flex-col space-y-1.5"></div>
-                        <div className="flex flex-col space-y-1.5"></div>
-                      </div>
-                    </form>
-                  </CardContent>
-                  <CardFooter className="flex justify-between"></CardFooter>
-                </Card>
-                <Card className="w-[350px]">
-                  <CardHeader>
-                    <CardTitle>Create project</CardTitle>
-                    <CardDescription>
-                      Deploy your new project in one-click.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <form>
-                      <div className="grid w-full items-center gap-4">
-                        <div className="flex flex-col space-y-1.5"></div>
-                        <div className="flex flex-col space-y-1.5"></div>
-                      </div>
-                    </form>
-                  </CardContent>
-                  <CardFooter className="flex justify-between"></CardFooter>
-                </Card>
-                <Card className="w-[350px]">
-                  <CardHeader>
-                    <CardTitle>Create project</CardTitle>
-                    <CardDescription>
-                      Deploy your new project in one-click.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <form>
-                      <div className="grid w-full items-center gap-4">
-                        <div className="flex flex-col space-y-1.5"></div>
-                        <div className="flex flex-col space-y-1.5"></div>
-                      </div>
-                    </form>
-                  </CardContent>
-                  <CardFooter className="flex justify-between"></CardFooter>
-                </Card>
-              </TabsContent>
-              <TabsContent value="ideas">
-                Change your password here.
-              </TabsContent>
-              <TabsContent value="important">
-                Change your password here.
+                {activeTabData &&
+                  activeTabData.map((data) => <NoteCard key={data.id} />)}
               </TabsContent>
             </div>
+            {openDrawer && (
+              <CreateNote
+                open={openDrawer}
+                close={() => setOpenDrawer(false)}
+                activeTab={activeTab}
+              />
+            )}
           </Tabs>
         </div>
       </div>
