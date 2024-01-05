@@ -3,9 +3,9 @@ import Sidebar from "./Sidebar"
 
 const Layout = ({ children }) => {
   return (
-    <div className="flex">
+    <div className="flex relative">
       <Sidebar />
-      {children}
+      <div className="relative w-5/6">{children}</div>
     </div>
   )
 }
