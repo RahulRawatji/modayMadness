@@ -45,7 +45,7 @@ const Sidebar = () => {
           to="/"
         >
           <GiBlackBook size={18} />
-          My Notes
+          Quick Notes
         </NavLink>
         <NavLink
           className="flex gap-2 items-center pl-4 py-1 hover:bg-slate-200 hover:cursor-pointer"

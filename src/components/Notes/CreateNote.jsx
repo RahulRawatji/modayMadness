@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea"
 
 const CreateNote = ({ open, close }) => {
   return (
-    <Drawer open={open}>
+    <Drawer dismissible={false} open={open}>
       <DrawerContent onInteractOutside={close} className="h-[600px]">
         <div className="flex justify-end mr-6 gap-6">
           <Button>Save</Button>

@@ -2,32 +2,10 @@ const columns = ["ToDo List", "In Progress", "Review", "Complete"]
 const data = {
   "Todo List": [
     {
-      id: 1,
-      icon: "⭕️",
-      status: "open",
-      title: "Human Interest Form",
-      content: "Fill out human interest distribution form",
-    },
-    {
-      id: 2,
-      icon: "⭕️",
-      status: "open",
-      title: "Purchase present",
-      content: "Get an anniversary gift",
-    },
-    {
-      id: 3,
-      icon: "⭕️",
-      status: "open",
-      title: "Invest in investments",
-      content: "Call the bank to talk about investments",
-    },
-    {
-      id: 4,
-      icon: "⭕️",
-      status: "open",
-      title: "Daily reading",
-      content: "Finish reading Intro to UI/UX",
+      id: "1",
+      title: "asdasdasdasdasoijfpoiaj sfoasidjfasodif",
+      content: "asdasda sdasdasoij fpoiajsfoasidjfasodif",
+      // created_at: dayjs().format("MMM DD,YYYY hh:mm A"),
     },
   ],
   "In Progress": [],

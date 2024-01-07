@@ -16,14 +16,23 @@ export default function Draggable(props) {
       }
     : undefined
 
+  const customPointer = (e) => {
+    if (e.target.id === "no_drag") {
+      e.stopPropagation()
+    } else {
+      listeners.onPointerDown(e)
+    }
+  }
+
   return (
     <div
       ref={setNodeRef}
       style={style}
-      {...listeners}
+      // {...listeners}
       {...attributes}
-      className="border p-2 flex shadow-md "
-      onClick={() => console.log(props.data.id)}
+      onPointerDown={customPointer}
+      className="border p-2 flex shadow-md bg-white rounded"
+      onClick={(e) => console.log(e, props.data.id)}
     >
       {props.children}
     </div>

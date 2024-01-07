@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { DndContext } from "@dnd-kit/core"
 import { v4 as uuidv4 } from "uuid"
+import dayjs from "dayjs"
 import Draggable from "./Draggable"
 import Droppable from "./Droppable"
 import { data } from "./constant/constant"
@@ -10,15 +11,22 @@ import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { IoIosReturnLeft } from "react-icons/io"
+import { MdOutlineEditNote } from "react-icons/md"
+import { IoCloseOutline } from "react-icons/io5"
 import Layout from "../Layout"
+import Drawer from "../common/Drawer"
 
 export default function Board() {
   const [boardData, setBoardData] = useState(data)
   const [movingElement, setMovingElement] = useState({})
+  const [colTitle, setColTitle] = useState("")
   const [startCol, setStartCol] = useState({})
   const [showNewCard, setShowNewCard] = useState({ visible: false, col: null })
   const [showAddNewCol, setShowAddNewCol] = useState(false)
+  const [showDrawer, setShowDrawer] = useState(false)
   const [newTask, setNewTask] = useState("")
+  const [drawerData, setDrawerData] = useState({})
+
   function handleDragEnd(event) {
     const temp = cloneDeep(boardData)
 
@@ -41,11 +49,6 @@ export default function Board() {
     setMovingElement(e.active.data.current)
   }
 
-  const handleAddList = () => {
-    setShowAddNewCol(true)
-    setBoardData((prev) => ({ ...prev, ["Backlog"]: [] }))
-  }
-
   const addNewCard = (colTitle) => {
     setShowNewCard((prev) => ({ visible: true, col: colTitle }))
     const newCardData = {
@@ -57,17 +60,34 @@ export default function Board() {
     }
   }
 
+  const addCol = () => {
+    if (colTitle !== "") setBoardData((prev) => ({ ...prev, [colTitle]: [] }))
+  }
+
   const saveNewTask = (colTitle) => {
     const tempBoardData = cloneDeep(boardData)
     if (newTask !== "") {
       tempBoardData[colTitle] = [
         ...tempBoardData[colTitle],
-        { id: uuidv4(), title: newTask, content: "Get an anniversary gift" },
+        {
+          id: uuidv4(),
+          title: newTask,
+          content: "",
+          created_at: dayjs().format("MMM DD,YYYY hh:mm A"),
+        },
       ]
 
       setBoardData((prev) => tempBoardData)
     }
     setShowNewCard((prev) => ({ ...prev, visible: false }))
+  }
+
+  const editTaskHandler = (e, title) => {
+    e.preventDefault()
+    setDrawerData({
+      title,
+    })
+    setShowDrawer(true)
   }
   return (
     <Layout>
@@ -85,21 +105,39 @@ export default function Board() {
 
                 {boardData[colTitle].map((d) => (
                   <Draggable key={d.id} id={colTitle} data={d}>
-                    <div className="flex flex-col w-full">
-                      <div className="flex justify-center items-center ">
-                        <h2 className="font-semibold text-sm">{d.title}</h2>
-                        <span className="">{d.icon}</span>
+                    <div className="flex flex-col w-full gap-2">
+                      <div className="flex justify-between text-start">
+                        <div className="w-2/3">
+                          <h2 className="font-semibold text-sm break-words">
+                            {d.title}
+                          </h2>
+                        </div>
+
+                        <MdOutlineEditNote
+                          size={24}
+                          onClick={(e) => editTaskHandler(e, d.title)}
+                          className="hover:scale-105 hover:bg-slate-300 m-1"
+                          id="no_drag"
+                        />
                       </div>
-                      <p className="text-sm mt-2 text-center">{d.content}</p>
+                      <div className="text-[12px] mt-2">{d?.created_at}</div>
+                      <p className="text-sm mt-2 text-start break-words ">
+                        {d.content}
+                      </p>
                     </div>
                   </Draggable>
                 ))}
                 {showNewCard.visible && showNewCard.col === colTitle && (
-                  <Input
-                    onBlur={() => saveNewTask(colTitle)}
-                    onChange={(e) => setNewTask(e.target.value)}
-                    placeholder="Enter"
-                  />
+                  <div>
+                    <Input
+                      onBlur={() => saveNewTask(colTitle)}
+                      onChange={(e) => setNewTask(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") saveNewTask(colTitle)
+                      }}
+                      placeholder="Give a title"
+                    />
+                  </div>
                 )}
 
                 <button
@@ -113,14 +151,17 @@ export default function Board() {
             ))}
             <div>
               <Dialog>
-                <DialogTrigger>
-                  <MdOutlineAdd size={22} />
+                <DialogTrigger className="flex gap-2">
+                  <MdOutlineAdd size={22} /> Add Block
                 </DialogTrigger>
                 <DialogContent>
                   <div className="flex gap-4 pr-4">
-                    <Input placeholder="Status" />
-                    <Button variant="outline">
-                      <span className="pr-2"> Add</span>{" "}
+                    <Input
+                      placeholder="Status"
+                      onChange={(e) => setColTitle(e.target.value)}
+                    />
+                    <Button variant="outline" onClick={() => addCol()}>
+                      <span className="pr-2">Add</span>{" "}
                       <IoIosReturnLeft size={18} />
                     </Button>
                   </div>
@@ -130,6 +171,22 @@ export default function Board() {
           </div>
         </div>
       </DndContext>
+      {showDrawer && (
+        <Drawer close={() => setShowDrawer(false)} className="m-2">
+          <div className="flex justify-between">
+            <input
+              placeholder="United"
+              className="text-3xl"
+              value={drawerData.title}
+            />
+            <IoCloseOutline
+              size={24}
+              onClick={() => setShowDrawer(false)}
+              className="hover:cursor-pointer"
+            />
+          </div>
+        </Drawer>
+      )}
     </Layout>
   )
 }
